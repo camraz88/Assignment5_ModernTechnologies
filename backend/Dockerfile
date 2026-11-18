@@ -4,7 +4,7 @@ FROM node:18-alpine
 # Puts a working directory inside the container
 WORKDIR /app
 
-# Copies package.json and package-loc.json
+# Copies package.json and package-lock.json
 COPY package*.json ./
 
 # Installs dependencies
@@ -15,6 +15,9 @@ COPY . .
 
 # Creates a directory for the SQLite database file
 RUN mkdir -p /app/data
+
+# Moves recipes.db into /app/data so the database is saved in the volume
+RUN ln -sf /app/data/recipes.db /app/recipes.db
 
 # Exposes the port the backend runs on
 EXPOSE 5000
