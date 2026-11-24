@@ -1,0 +1,30 @@
+steps:
+  # Build the frontend Docker image, baking in the backend URL
+  # Replace the URL below with your recipe-backend Cloud Run URL (no trailing slash, no /api/recipes)
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '--build-arg', 'VITE_API_URL=https://YOUR-BACKEND-URL.run.app',
+        '-t', 'gcr.io/$PROJECT_ID/recipe-frontend',
+        './frontend'
+      ]
+
+  # Push the image to the registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/recipe-frontend']
+
+  # Deploy to Cloud Run (nginx listens on port 80)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      [
+        'run', 'deploy', 'recipe-frontend',
+        '--image', 'gcr.io/$PROJECT_ID/recipe-frontend',
+        '--platform', 'managed',
+        '--region', 'us-central1',
+        '--allow-unauthenticated',
+        '--port', '80'
+      ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
