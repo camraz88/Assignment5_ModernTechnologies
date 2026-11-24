@@ -5,7 +5,7 @@ steps:
     args:
       [
         'build',
-        '--build-arg', 'VITE_API_URL=https://YOUR-BACKEND-URL.run.app',
+        '--build-arg', 'VITE_API_URL=https://recipe-backend-xxxxx.us-central1.run.app',
         '-t', 'gcr.io/$PROJECT_ID/recipe-frontend',
         './frontend'
       ]
